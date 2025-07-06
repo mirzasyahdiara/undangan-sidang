@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Undangan Sidang - Mirza Syahdiara</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #800000;
+      color: white;
+    }
+    .page {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: transform 1s ease-in-out;
+    }
+    .page1, .page2, .page3 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .page1 img {
+      width: 150px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 1rem 0;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      transition: transform 0.8s ease, box-shadow 0.8s ease;
+      animation: fadeInZoom 2s ease forwards;
+    }
+    @keyframes fadeInZoom {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .title {
+      font-size: 2rem;
+      color: #FFD1D1;
+      margin-bottom: 0.5rem;
+    }
+    .highlight {
+      color: orange;
+      font-weight: bold;
+    }
+    .container-small {
+      max-width: 400px;
+      width: 90%;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+      padding: 1rem;
+    }
+    form input[type="text"], form input[type="email"] {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+    .rsvp-button, .nav-button {
+      background-color: #FFD1D1;
+      color: #800000;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+    }
+    .nav-button:hover {
+      background-color: #FFB1B1;
+      transform: translateY(-2px);
+    }
+    .nav-button:disabled {
+      background-color: #666;
+      color: #999;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .nav-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .footer {
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="page page1" style="transform: translateY(0%);">
+    <div class="container-small">
+      <h1 class="title">UNDANGAN <span class="highlight">Sidang Skripsi</span></h1>
+      <p>Program Studi Informatika<br/>Universitas Ubudiyah Indonesia</p>
+      <img src="2.jpg" alt="Foto Mirza Syahdiara">
+      <h2><b>MIRZA SYAHDIARA</b></h2>
+      <p><i>Sistem Informasi Reservasi & Penjadwalan Dengan Notifikasi Real-Time</i></p>
+    </div>
+  </div>
+
+  <div class="page page2" style="transform: translateY(100%);">
+    <div class="container-small">
+      <h1 class="title">Detail Sidang</h1>
+      <p><strong>Tanggal:</strong> Selasa, 16 Juli 2025</p>
+      <p><strong>Waktu:</strong> 09.00 WIB</p>
+      <p><strong>Tempat:</strong> Ruang Sidang 1, Fakultas Sains & Teknologi</p>
+      <p>Kehadiran dan dukungan Anda sangat berarti bagi kami.</p>
+    </div>
+  </div>
+
+  <div class="page page3" style="transform: translateY(200%);">
+    <div class="container-small">
+      <h1 class="title">Konfirmasi Kehadiran</h1>
+      <form onsubmit="handleRSVP(event)">
+        <input type="text" id="nama" placeholder="Nama Anda" required /><br />
+        <input type="email" id="email" placeholder="Email Anda" required /><br />
+        <button type="submit" class="rsvp-button">Konfirmasi Kehadiran</button>
+      </form>
+      <div class="footer">Terima kasih atas perhatian dan kerjasamanya.</div>
+    </div>
+  </div>
+
+  <div class="nav-controls">
+    <button class="nav-button" id="prevBtn" onclick="prevPage()">Sebelumnya</button>
+    <button class="nav-button" id="nextBtn" onclick="nextPage()">Berikutnya</button>
+  </div>
+
+  <script>
+    let currentPage = 0;
+    const pages = document.querySelectorAll('.page');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateButtons() {
+      // Disable tombol sebelumnya jika di halaman pertama
+      prevBtn.disabled = currentPage === 0;
+      
+      // Sembunyikan tombol berikutnya jika di halaman terakhir
+      if (currentPage === pages.length - 1) {
+        nextBtn.style.display = 'none';
+      } else {
+        nextBtn.style.display = 'inline-block';
+      }
+    }
+
+    function scrollToPage(index) {
+      if (index < 0 || index >= pages.length) return;
+      currentPage = index;
+      pages.forEach((page, i) => {
+        page.style.transform = `translateY(${(i - currentPage) * 100}%)`;
+      });
+      updateButtons();
+    }
+
+    function nextPage() {
+      if (currentPage < pages.length - 1) {
+        scrollToPage(currentPage + 1);
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 0) {
+        scrollToPage(currentPage - 1);
+      }
+    }
+
+    // Tambahkan navigasi dengan klik/tap di mana saja (hanya untuk next)
+    document.body.addEventListener('click', (event) => {
+      // Jangan trigger jika klik pada tombol atau form
+      if (!event.target.closest('.nav-controls') && !event.target.closest('form')) {
+        nextPage();
+      }
+    });
+
+    function handleRSVP(event) {
+      event.preventDefault();
+      const nama = document.getElementById('nama').value;
+      const email = document.getElementById('email').value;
+      alert(`Terima kasih, ${nama}! Konfirmasi kehadiran Anda telah tercatat.`);
+      document.getElementById('nama').value = '';
+      document.getElementById('email').value = '';
+    }
+
+    // Initialize button states
+    updateButtons();
+  </script>
+</body>
+</html>
